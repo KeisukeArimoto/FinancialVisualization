@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" type="text/css" href="{% static 'login.css' %}">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script href="{% static 'login.js' %}"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light navbar-laravel">
+        <div class="container mb-5">
+        </div>
+    </nav>
+
+    <main class="login-form center-block">
+        <div class="cotainer">
+            <div class="row justify-content-center">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="visibility-hidden mb-3">
+                                {{ message }} ※ここにメッセージが出力されます
+                            </div>
+                            <form action="" method="POST">{% csrf_token %}
+                                <div class="text-center mb-3">
+                                    ※ここにサービスロゴが入ります
+                                </div>
+
+                                <div class="text-center mb-3">
+                                    この先にあなたの成長が待っています
+                                </div>
+
+                                <div class="form-group row  justify-content-center">
+                                    <div class="col-md-6">
+                                        <input type="text" id="email_address" class="form-control" name="email_address"
+                                            placeholder="mail address" required autofocus>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row justify-content-center">
+                                    <div class="col-md-6">
+                                        <input type="password" id="password" class="form-control" name="password"
+                                            placeholder="password" required>
+                                    </div>
+                                </div>
+
+                                <div class="text-center mb-3">
+                                    <button type="submit" class="btn btn-primary w-25">
+                                        Sign in
+                                    </button>
+                                </div>
+                                <div class="text-center m-0">
+                                    <a href="/register" class="btn btn-link">
+                                        ▶パスワード忘れた...
+                                    </a>
+                                </div>
+                                <div class="text-center m-0">
+                                    <a href="/register" class="btn btn-link">
+                                        ▶新しく始める!
+                                    </a>
+                                </div>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

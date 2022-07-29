@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>有価証券報告書ダウンロード管理画面</title>
+</head>
+<body>
+    <h1>有価証券報告書ダウンロード</h1>
+    <h2>管理画面</h2>
+    <h3>ダウンロードする期間を指定</h3>
+    <h4 style=color:red>SinceはUntilより過去日を指定。Untilは昨日以前を指定する。※画面で制御できるように開発したい</h4>
+    <form method="POST" action="saveSpecifiedDate">{% csrf_token %}
+        <div class="form-group">
+            <label for="since">Since:</label>
+            <input type="date" class="form-control" id="since" name="since" value={{ since }}>
+        </div>
+        <div class="form-group">
+            <label for="unil">Until:</label>
+            <input type="date" class="form-control" id="until" name="until" value={{ until }}>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Download</button>
+        </div>
+    </form>
+</body>
+</html>

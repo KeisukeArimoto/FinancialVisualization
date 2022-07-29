@@ -1,0 +1,15 @@
+{
+	"name": "Python_financial_visualization",
+	// Dockerfileでイメージ・コンテナを作成
+	"dockerComposeFile": "docker-compose.yml",
+	// VS Codeのワークスペースフォルダ
+	"workspaceFolder": "/workspace",
+	// 使用するサービス
+	"service": "web",
+	// リモート先のVS Codeにインストールする拡張機能
+	"extensions": [
+		"ms-python.python",
+		"esbenp.prettier-vscode"
+	],
+	"shutdownAction": "stopCompose"
+}

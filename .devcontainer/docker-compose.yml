@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  web:
+    build: .
+    tty: true
+    volumes:
+      - ../:/workspace
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlpassword
+      MYSQL_DATABASE: FinancialVisualization
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    build:
+      dockerfile: mysql_Dockerfile
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=mysqlpassword
+
+volumes:
+  mysql_data:
