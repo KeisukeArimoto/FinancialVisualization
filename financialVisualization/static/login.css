@@ -78,5 +78,5 @@ body {
 
 .visibility-hidden {
     text-align: center;
-    /* visibility:hidden; */
+    visibility: hidden;
 }
