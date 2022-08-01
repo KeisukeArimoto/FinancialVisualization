@@ -2,6 +2,7 @@ import datetime
 import os
 import shutil
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 from saveSecurityReports import APP_LABEL, EDINET_CODE_DIR, WORK_DIR
 from saveSecurityReports.services.getDoclistServices import edinet_operator
@@ -13,10 +14,12 @@ from saveSecurityReports.services.getFinancialData import eggs_operator
 # クライアントからのリクエストに応じて必要なロジックに割り振り、レンダリングする
 
 
+@login_required
 def show_management_view(request):
     return render(request, '%s/admin.html' % APP_LABEL)
 
 
+@login_required
 def save_specified_date(request):
     if request.method == 'POST':
         since_datetime = datetime.datetime.strptime(
