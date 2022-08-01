@@ -1,4 +1,3 @@
-from ast import List
 from django.db import models
 from django.contrib.auth.models import UserManager, AbstractUser
 

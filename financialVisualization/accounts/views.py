@@ -1,4 +1,3 @@
-from xml.dom import ValidationErr
 from django.forms import ValidationError
 from django.shortcuts import render
 
@@ -10,7 +9,7 @@ from django.core.mail import send_mail
 from validate_email import validate_email
 
 from accounts import APP_LABEL
-from accounts.models import CustomUser, CustomUserManager
+from accounts.models import CustomUser
 from utils.token import TokenGenerator
 
 
