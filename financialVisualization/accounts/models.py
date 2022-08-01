@@ -46,7 +46,6 @@ class CustomUserManager(UserManager):
         return self.create_user(email, password, **extra_fields)
 
     def change_password(self, email, password=None, is_active=True):
-        # create_user と create_superuser の共通処理
         if not email:
             raise ValueError('Email address must be set')
 

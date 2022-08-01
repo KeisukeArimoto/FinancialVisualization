@@ -127,7 +127,6 @@ def set_password(request, token):
                 context = {'error_messages': e.error_list}
                 return render(request, '%s/password.html' % APP_LABEL, context)
 
-            # TODO パスワード保存
             CustomUser.objects.change_password(email, PASS, True)
 
             context = {'success_message': 'パスワードを登録しました。早速ログインしてみましょう！'}
