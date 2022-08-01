@@ -1,12 +1,17 @@
+from xml.dom import ValidationErr
+from django.forms import ValidationError
 from django.shortcuts import render
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.password_validation import validate_password
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
+from validate_email import validate_email
 
 from accounts import APP_LABEL
-from accounts.models import CustomUser
+from accounts.models import CustomUser, CustomUserManager
+from utils.token import TokenGenerator
 
 
 def Login(request):
@@ -16,26 +21,30 @@ def Login(request):
         EMAIL = request.POST['email_address']
         PASS = request.POST['password']
 
-        # TODO EMAL,PASSのバリデーション
+        if not (validate_email(EMAIL)):
+            context = {'error_messages': ['メールアドレスが不正です。メールアドレスを確認してください。']}
+            return render(request, '%s/login.html' % APP_LABEL, context)
 
-        # Djangoの認証機能
+        try:
+            validate_password(PASS)
+        except ValidationError as e:
+            # TODO errorメッセージを文字列のlistでcontextに入れたい
+            context = {'error_messages': e.error_list}
+            return render(request, '%s/login.html' % APP_LABEL, context)
+
         user = authenticate(username=EMAIL, password=PASS)
 
-        # ユーザ認証
         if user:
-            # ユーザアクティベート判定
             if user.is_active:
                 login(request, user)
-                # ホーム画面遷移
                 # TODO ホーム画面作成
-                return render(request, '%s/#' % APP_LABEL)
+                return render(request, 'SaveSecurityReports/admin.html')
             else:
-                # ユーザアクティベートしていないときの処理
-                context = {'error_message': '本ユーザは使用できません。再度ユーザ登録をしてください'}
+                context = {'error_messages': [
+                    'パスワード登録が完了していません。ユーザ登録画面よりパスワード登録を行ってください']}
                 return render(request, '%s/login.html' % APP_LABEL, context)
         else:
-            # メールアドレスまたはパスワードに不備がある
-            context = {'error_message': 'メールアドレスまたはパスワードが間違っています'}
+            context = {'error_messages': ['メールアドレスまたはパスワードが間違っています']}
             return render(request, '%s/login.html' % APP_LABEL, context)
     return render(request, '%s/login.html' % APP_LABEL)
 
@@ -52,9 +61,18 @@ def register(request):
     elif request.method == 'POST':
         email = request.POST['email_address']
 
-        # TODO emailバリデーション
+        if not (validate_email(email)):
+            context = {'error_messages': [
+                'このメールアドレスは登録できません。メールアドレスを確認してください。']}
+            return render(request, '%s/register.html' % APP_LABEL, context)
 
-        # TODO emailをユーザ登録する
+        user = CustomUser.objects.filter(email=email)
+        if user:
+            # TODO すでにメールアドレスが登録されている場合
+            pass
+        else:
+            CustomUser.objects.create_nomal_user(
+                email=email, password=None, active=False)
 
         send_register_mail(email)
         context = {
@@ -68,37 +86,54 @@ def send_register_mail(email):
     recipient_list = [email]
     # TODO 送信元アドレス、パスワードはDB管理 (暗号化) したい
     from_mail = 'ここに送信元のメールアドレスが来るよ'
-    # TODO メッセージ内のURLにトークンを埋め込むなどしたい (password設定用ページにてトークンからemailアドレスが取得できるとベスト)
-    # TODO 文言修正
-    msg_html = render_to_string('mails/register.html')
-    msg_txt = render_to_string('mails/register.txt')
 
-    send_mail(subject=subject, message=msg_txt, from_mail=from_mail,
-              recipient_list=recipient_list, html_message=msg_html)
+    payload_data = {'email': email}
+    tokenGenerator = TokenGenerator()
+    token = tokenGenerator.generateToken(payload_data=payload_data)
+    # TODO ホスト名は設定ファイルに切り出す?
+    url = 'http://127.0.0.1:8000/login/password/%s' % token
+    print(url)
+
+    # TODO メール文言修正
+    msg_html = render_to_string('mails/register_mail.html', {'url': url})
+    msg_txt = render_to_string('mails/register_mail.txt')
+
+    # send_mail(subject=subject, message=msg_txt, from_mail=from_mail,
+    #           recipient_list=recipient_list, html_message=msg_html)
 
 
-def set_password(request):
+def set_password(request, token):
     if request.method == 'GET':
         return render(request, '%s/password.html' % APP_LABEL)
     elif request.method == 'POST':
-        # TODO どこからかemailを取得する
-        #user = CustomUser.objects.filter(email=email)
-        # if user:
-        PASS = request.POST['password']
-        PASS_AGAIN = request.POST['password_again']
+        tokenGenerator = TokenGenerator()
+        payload = tokenGenerator.decodeToken(token)
+        email = payload.get('email')
+        user = CustomUser.objects.get(email=email)
+        print(type(user))
+        if user:
+            PASS = request.POST['password']
+            PASS_AGAIN = request.POST['password_again']
 
-        if PASS != PASS_AGAIN:
-            context = {'error_message': 'パスワードが一致していません。もう一度パスワードを入力してください。'}
+            if PASS != PASS_AGAIN:
+                context = {'error_messages': [
+                    'パスワードが一致していません。もう一度パスワードを入力してください。']}
+                return render(request, '%s/password.html' % APP_LABEL, context)
+
+            try:
+                validate_password(PASS)
+            except ValidationError as e:
+                # TODO errorメッセージを文字列のlistでcontextに入れたい
+                context = {'error_messages': e.error_list}
+                return render(request, '%s/password.html' % APP_LABEL, context)
+
+            # TODO パスワード保存
+            CustomUser.objects.change_password(email, PASS, True)
+
+            context = {'success_message': 'パスワードを登録しました。早速ログインしてみましょう！'}
             return render(request, '%s/password.html' % APP_LABEL, context)
 
-        # TODO パスワードバリデーション
-
-        # TODO パスワード保存
-
-        context = {'success_message': 'パスワードを登録しました。早速ログインしてみましょう！'}
-        return render(request, '%s/password.html' % APP_LABEL, context)
-
-        # else:
-        #context = {'error_message': 'リンクが不正です。再度メールアドレスの登録からやり直してください'}
-        # return render(request, '%s/password.html' % APP_LABEL, context)
+        else:
+            context = {'error_messages': '[リンクが不正です。再度メールアドレスの登録からやり直してください]'}
+            return render(request, '%s/password.html' % APP_LABEL, context)
     return render(request, '%s/password.html' % APP_LABEL)

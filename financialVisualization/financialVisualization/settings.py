@@ -98,6 +98,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 6,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -105,13 +108,16 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+    {
+        'NAME': 'utils.validations.CustomPasswordValidator'
+    },
 ]
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ja'
 
 TIME_ZONE = 'Asia/Tokyo'
 
@@ -138,3 +144,10 @@ LOGIN_REDIRECT_URL = '/#'
 LOGOUT_REDIRECT_URL = '/login'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+# 管理の方法検討する
+EMAIL_HOST_USER = 'ホストユーザのアドレス'
+EMAIL_HOST_PASSWORD = 'パスワード'
+EMAIL_USE_TLS = True
