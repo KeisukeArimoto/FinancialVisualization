@@ -38,7 +38,9 @@
                                     </div>
                                 </div>
                                 <div class="text-center text-success mb-2">
-                                    {{ success_message }}
+                                    {% for success_message in success_messages %}
+                                        {{ success_message }}<br />
+                                    {% endfor %}
                                 </div>
                                 <div class="text-center text-danger mb-2">
                                     {% for error_message in error_messages %}

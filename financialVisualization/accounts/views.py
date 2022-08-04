@@ -10,7 +10,7 @@ from validate_email import validate_email
 
 from accounts import APP_LABEL
 from accounts.models import CustomUser
-from financialVisualization.settings_local import EMAIL_HOST_USER
+from financialVisualization.settings_local import EMAIL_HOST_USER, HOST
 from utils.token import TokenGenerator
 
 
@@ -73,7 +73,7 @@ def register(request):
 
         send_register_mail(email)
         context = {
-            'success_message': 'パスワード登録用のメールを送信しました。メール記載のリンクよりパスワードを登録してください。'}
+            'success_messages': ['パスワード登録用のメールを送信しました。', 'メール記載のリンクよりパスワードを登録してください。']}
         return render(request, '%s/register.html' % APP_LABEL, context)
     return render(request, '%s/register.html' % APP_LABEL)
 
@@ -86,8 +86,8 @@ def send_register_mail(email):
     payload_data = {'email': email}
     tokenGenerator = TokenGenerator()
     token = tokenGenerator.generateToken(payload_data=payload_data)
-    # TODO ホスト名は設定ファイルに切り出す?
-    url = 'http://127.0.0.1:8000/login/password/%s' % token
+    host = HOST
+    url = f"http://{host}/login/password/{token}"
     print(url)
 
     # TODO メール文言修正
@@ -118,13 +118,12 @@ def set_password(request, token):
             try:
                 validate_password(PASS)
             except ValidationError as e:
-                # TODO errorメッセージを文字列のlistでcontextに入れたい
                 context = {'error_messages': e.messages}
                 return render(request, '%s/password.html' % APP_LABEL, context)
 
             CustomUser.objects.change_password(email, PASS, True)
 
-            context = {'success_message': 'パスワードを登録しました。早速ログインしてみましょう！'}
+            context = {'success_messagess': ['パスワードを登録しました。早速ログインしてみましょう！']}
             return render(request, '%s/password.html' % APP_LABEL, context)
 
         else:
