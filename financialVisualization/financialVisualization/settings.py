@@ -147,7 +147,4 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-# 管理の方法検討する
-EMAIL_HOST_USER = 'ホストユーザのアドレス'
-EMAIL_HOST_PASSWORD = 'パスワード'
 EMAIL_USE_TLS = True

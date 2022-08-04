@@ -10,6 +10,7 @@ from validate_email import validate_email
 
 from accounts import APP_LABEL
 from accounts.models import CustomUser
+from financialVisualization.settings_local import EMAIL_HOST_USER
 from utils.token import TokenGenerator
 
 
@@ -36,7 +37,6 @@ def Login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                # TODO ホーム画面作成
                 return render(request, 'visualizeData/home.html')
             else:
                 context = {'error_messages': [
@@ -67,7 +67,6 @@ def register(request):
 
         user = CustomUser.objects.filter(email=email)
         if user:
-            # TODO すでにメールアドレスが登録されている場合
             pass
         else:
             CustomUser.objects.create_nomal_user(
@@ -84,7 +83,7 @@ def send_register_mail(email):
     subject = '登録用メール'
     recipient_list = [email]
     # TODO 送信元アドレス、パスワードはDB管理 (暗号化) したい
-    from_mail = 'ここに送信元のメールアドレスが来るよ'
+    from_mail = EMAIL_HOST_USER
 
     payload_data = {'email': email}
     tokenGenerator = TokenGenerator()
@@ -97,8 +96,8 @@ def send_register_mail(email):
     msg_html = render_to_string('mails/register_mail.html', {'url': url})
     msg_txt = render_to_string('mails/register_mail.txt')
 
-    # send_mail(subject=subject, message=msg_txt, from_mail=from_mail,
-    #           recipient_list=recipient_list, html_message=msg_html)
+    send_mail(subject, msg_txt, from_mail,
+              recipient_list, html_message=msg_html)
 
 
 def set_password(request, token):
@@ -109,7 +108,6 @@ def set_password(request, token):
         payload = tokenGenerator.decodeToken(token)
         email = payload.get('email')
         user = CustomUser.objects.get(email=email)
-        print(type(user))
         if user:
             PASS = request.POST['password']
             PASS_AGAIN = request.POST['password_again']
