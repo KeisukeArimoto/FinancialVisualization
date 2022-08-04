@@ -37,7 +37,7 @@ def Login(request):
             if user.is_active:
                 login(request, user)
                 # TODO ホーム画面作成
-                return render(request, 'SaveSecurityReports/admin.html')
+                return render(request, 'visualizeData/home.html')
             else:
                 context = {'error_messages': [
                     'パスワード登録が完了していません。ユーザ登録画面よりパスワード登録を行ってください']}

@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', include('accounts.urls')),
     path('saveSecRepo/', include('saveSecurityReports.urls')),
+    path('visualizeData/', include('visualizeData.urls')),
 ]
