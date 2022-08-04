@@ -28,8 +28,7 @@ def Login(request):
         try:
             validate_password(PASS)
         except ValidationError as e:
-            # TODO errorメッセージを文字列のlistでcontextに入れたい
-            context = {'error_messages': e.error_list}
+            context = {'error_messages': e.messages}
             return render(request, '%s/login.html' % APP_LABEL, context)
 
         user = authenticate(username=EMAIL, password=PASS)
@@ -82,7 +81,6 @@ def register(request):
 def send_register_mail(email):
     subject = '登録用メール'
     recipient_list = [email]
-    # TODO 送信元アドレス、パスワードはDB管理 (暗号化) したい
     from_mail = EMAIL_HOST_USER
 
     payload_data = {'email': email}
@@ -121,7 +119,7 @@ def set_password(request, token):
                 validate_password(PASS)
             except ValidationError as e:
                 # TODO errorメッセージを文字列のlistでcontextに入れたい
-                context = {'error_messages': e.error_list}
+                context = {'error_messages': e.messages}
                 return render(request, '%s/password.html' % APP_LABEL, context)
 
             CustomUser.objects.change_password(email, PASS, True)
@@ -130,6 +128,6 @@ def set_password(request, token):
             return render(request, '%s/password.html' % APP_LABEL, context)
 
         else:
-            context = {'error_messages': '[リンクが不正です。再度メールアドレスの登録からやり直してください]'}
+            context = {'error_messages': ['リンクが不正です。再度メールアドレスの登録からやり直してください']}
             return render(request, '%s/password.html' % APP_LABEL, context)
     return render(request, '%s/password.html' % APP_LABEL)
