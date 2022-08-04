@@ -50,6 +50,7 @@ def Login(request):
 @login_required
 def Logout(request):
     logout(request)
+    # TODO ログアウトした後、すぐにログインできない (別ページに移動して、再度ログインページに入るとできる)事象解消
     return render(request, '%s/login.html' % APP_LABEL)
 
 
