@@ -9,3 +9,5 @@ RUN pip install requests
 RUN pip install pandas
 RUN pip install autopep8
 RUN pip install apscheduler
+RUN pip install validate_email
+RUN pip install PyJWT

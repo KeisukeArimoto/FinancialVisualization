@@ -1,4 +1,3 @@
-from ast import List
 from django.db import models
 from django.contrib.auth.models import UserManager, AbstractUser
 
@@ -44,6 +43,17 @@ class CustomUserManager(UserManager):
         extra_fields.setdefault('role', 2)
 
         return self.create_user(email, password, **extra_fields)
+
+    def change_password(self, email, password=None, is_active=True):
+        if not email:
+            raise ValueError('Email address must be set')
+
+        user = self.get(email=email)
+        user.active = is_active
+        user.set_password(password)
+        user.save(using=self._db)
+
+        return user
 
 
 class CustomUser(AbstractUser):
