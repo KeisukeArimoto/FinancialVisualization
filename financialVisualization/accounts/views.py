@@ -1,5 +1,5 @@
 from django.forms import ValidationError
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -36,7 +36,7 @@ def Login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return render(request, 'visualizeData/home.html')
+                return redirect('/visualizeData/home', request)
             else:
                 context = {'error_messages': [
                     'パスワード登録が完了していません。ユーザ登録画面よりパスワード登録を行ってください']}
@@ -44,13 +44,6 @@ def Login(request):
         else:
             context = {'error_messages': ['メールアドレスまたはパスワードが間違っています']}
             return render(request, '%s/login.html' % APP_LABEL, context)
-    return render(request, '%s/login.html' % APP_LABEL)
-
-
-@login_required
-def Logout(request):
-    logout(request)
-    # TODO ログアウトした後、すぐにログインできない (別ページに移動して、再度ログインページに入るとできる)事象解消
     return render(request, '%s/login.html' % APP_LABEL)
 
 

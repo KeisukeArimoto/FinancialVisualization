@@ -21,7 +21,9 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <a class="navbar-brand" href="/visualizeData/home"
+        >FinancialDataVisualization</a
+      >
       <button
         class="navbar-toggler"
         type="button"
@@ -64,17 +66,6 @@
             </div>
           </li>
         </ul> -->
-        <form class="form-inline my-2 my-lg-0">
-          <input
-            class="form-control mr-sm-2"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-          />
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-            Search
-          </button>
-        </form>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item navbar-nav dropdown">
             <a
@@ -92,9 +83,21 @@
               class="dropdown-menu dropdown-menu-right"
               aria-labelledby="navbarDropdown"
             >
-              <a class="dropdown-item" href="#">My Information</a>
+              <form action="" method="POST" name="form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="myinformation" />
+                <a class="dropdown-item" href="javascript:form[0].submit()"
+                  >My Information</a
+                >
+              </form>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="logout">Log out</a>
+              <form action="" method="POST" name="form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="logout" />
+                <a class="dropdown-item" href="javascript:form[1].submit()"
+                  >Log out</a
+                >
+              </form>
             </div>
           </li>
         </ul>
