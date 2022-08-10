@@ -27,30 +27,32 @@
                             <div class="text-center mb-3">
                                 ※ここにサービスロゴが入ります
                             </div>
+                            <div class="text-center mb-3">
+                                <p>一歩を踏み出したあなたと共に、このサービスも成長します</p>
+                            </div>
                             <form action="" method="POST">{% csrf_token %}
-                                <div class="text-center mb-3">
-                                    <p>一歩を踏み出したあなたと共に、このサービスも成長します</p>
-                                </div>
                                 <div class="form-group row  justify-content-center">
-                                    <div class="col-md-6">
-                                        <input type="email" id="email_address" class="form-control" name="email_address"
-                                            placeholder="mail address" required autofocus>
+                                    <div class="col-md-10">
+                                        <div class="form-group">
+                                            <input type="email" id="email_address" class="form-control" name="email_address"
+                                                placeholder="mail address" required autofocus>
+                                        </div>
+                                        <div class="text-center text-success mb-2">
+                                            {% for success_message in success_messages %}
+                                                {{ success_message }}<br />
+                                            {% endfor %}
+                                        </div>
+                                        <div class="text-center text-danger mb-2">
+                                            {% for error_message in error_messages %}
+                                                {{ error_message }}<br />
+                                            {% endfor %}
+                                        </div>
+                                        <div class="text-center mb-3">
+                                            <button type="submit" class="btn btn-primary btn-block">
+                                                Send
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="text-center text-success mb-2">
-                                    {% for success_message in success_messages %}
-                                        {{ success_message }}<br />
-                                    {% endfor %}
-                                </div>
-                                <div class="text-center text-danger mb-2">
-                                    {% for error_message in error_messages %}
-                                        {{ error_message }}<br />
-                                    {% endfor %}
-                                </div>
-                                <div class="text-center mb-3">
-                                    <button type="submit" class="btn btn-primary w-25">
-                                        Send
-                                    </button>
                                 </div>
                             </form>
                             <div class="text-center m-0">

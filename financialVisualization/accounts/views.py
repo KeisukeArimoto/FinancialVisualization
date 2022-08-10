@@ -22,14 +22,15 @@ def Login(request):
         PASS = request.POST['password']
 
         if not (validate_email(EMAIL)):
-            context = {'error_messages': ['メールアドレスが不正です。メールアドレスを確認してください。']}
+            context = {'error_messages': [
+                'メールアドレスが不正です。', 'メールアドレスを確認してください。']}
             return render(request, '%s/login.html' % APP_LABEL, context)
 
-        try:
-            validate_password(PASS)
-        except ValidationError as e:
-            context = {'error_messages': e.messages}
-            return render(request, '%s/login.html' % APP_LABEL, context)
+        # try:
+        #     validate_password(PASS)
+        # except ValidationError as e:
+        #     context = {'error_messages': e.messages}
+        #     return render(request, '%s/login.html' % APP_LABEL, context)
 
         user = authenticate(username=EMAIL, password=PASS)
 
@@ -39,10 +40,10 @@ def Login(request):
                 return render(request, 'visualizeData/home.html')
             else:
                 context = {'error_messages': [
-                    'パスワード登録が完了していません。ユーザ登録画面よりパスワード登録を行ってください']}
+                    'パスワード登録が完了していません。', 'ユーザ登録画面よりパスワード登録を行ってください']}
                 return render(request, '%s/login.html' % APP_LABEL, context)
         else:
-            context = {'error_messages': ['メールアドレスまたはパスワードが間違っています']}
+            context = {'error_messages': ['メールアドレスかパスワードが間違っています']}
             return render(request, '%s/login.html' % APP_LABEL, context)
     return render(request, '%s/login.html' % APP_LABEL)
 
@@ -61,7 +62,7 @@ def register(request):
 
         if not (validate_email(email)):
             context = {'error_messages': [
-                'このメールアドレスは登録できません。メールアドレスを確認してください。']}
+                'このメールアドレスは登録できません。', 'メールアドレスを確認してください。']}
             return render(request, '%s/register.html' % APP_LABEL, context)
 
         user = CustomUser.objects.filter(email=email)
@@ -73,7 +74,7 @@ def register(request):
 
         send_register_mail(email)
         context = {
-            'success_messages': ['パスワード登録用のメールを送信しました。', 'メール記載のリンクよりパスワードを登録してください。']}
+            'success_messages': ['パスワード登録用のメールを送信しました。', 'メールからパスワードを登録してください。']}
         return render(request, '%s/register.html' % APP_LABEL, context)
     return render(request, '%s/register.html' % APP_LABEL)
 
@@ -112,7 +113,7 @@ def set_password(request, token):
 
             if PASS != PASS_AGAIN:
                 context = {'error_messages': [
-                    'パスワードが一致していません。もう一度パスワードを入力してください。']}
+                    'パスワードが一致していません。', 'もう一度パスワードを入力してください。']}
                 return render(request, '%s/password.html' % APP_LABEL, context)
 
             try:
@@ -127,6 +128,7 @@ def set_password(request, token):
             return render(request, '%s/password.html' % APP_LABEL, context)
 
         else:
-            context = {'error_messages': ['リンクが不正です。再度メールアドレスの登録からやり直してください']}
+            context = {'error_messages': [
+                'リンクが不正です。', '再度メールアドレスの登録からやり直してください']}
             return render(request, '%s/password.html' % APP_LABEL, context)
     return render(request, '%s/password.html' % APP_LABEL)

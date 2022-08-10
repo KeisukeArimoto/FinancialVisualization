@@ -28,41 +28,41 @@
                             <div class="text-center mb-3">
                                 ※ここにサービスロゴが入ります
                             </div>
+                            <div class="text-center mb-3">
+                                この先にあなたの成長が待っています
+                            </div>
                             <form action="" method="POST">{% csrf_token %}
-                                <div class="text-center mb-3">
-                                    この先にあなたの成長が待っています
-                                </div>
                                 <div class="form-group row  justify-content-center">
-                                    <div class="col-md-6">
-                                        <input type="email" id="email_address" class="form-control" name="email_address"
-                                            placeholder="mail address" required autofocus>
+                                    <div class="col-md-10">
+                                        <div class="form-group">
+                                            <input type="email" id="email_address" class="form-control" name="email_address"
+                                                placeholder="mail address" required autofocus>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" id="password" class="form-control" name="password"
+                                                placeholder="password" required>
+                                        </div>
+                                        <div class="text-center text-danger mb-2">
+                                            {% for error_message in error_messages %}
+                                                {{ error_message }}<br />
+                                            {% endfor %}
+                                        </div>
+                                        <div class="text-center mb-3">
+                                            <button type="submit" class="btn btn-primary btn-block">
+                                                Sign in
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group row justify-content-center">
-                                    <div class="col-md-6">
-                                        <input type="password" id="password" class="form-control" name="password"
-                                            placeholder="password" required>
-                                    </div>
-                                </div>
-                                <div class="text-center text-danger mb-2">
-                                    {% for error_message in error_messages %}
-                                        {{ error_message }}<br />
-                                    {% endfor %}
-                                </div>
-                                <div class="text-center mb-3">
-                                    <button type="submit" class="btn btn-primary w-25">
-                                        Sign in
-                                    </button>
                                 </div>
                             </form>
                             <div class="text-center m-0">
                                 <a href="/login/register" class="btn btn-link">
-                                    ▶パスワード忘れた...
+                                    ▶新しく始める!
                                 </a>
                             </div>
                             <div class="text-center m-0">
                                 <a href="/login/register" class="btn btn-link">
-                                    ▶新しく始める!
+                                    ▶パスワード忘れた...
                                 </a>
                             </div>
                         </div>
